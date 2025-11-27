@@ -34,12 +34,24 @@ function App() {
 
     setToDos([newTodo, ...toDos]);
   };
+  const onUpdate = (targetId) => {
+    // in todos array toggle isDone value of the todo item whose id is equal to targetIds
+    setToDos(
+      toDos.map((todo) =>
+        todo.id === targetId ? { ...todo, isDone: !todo.isDone } : todo
+      )
+    );
+  };
+  const onDelete = (targetId) => {
+    // in todos array filter out the todo item whose id is equal to targetId
+    setToDos(toDos.filter((todo) => todo.id !== targetId));
+  };
 
   return (
     <div className="App">
       <Header />
       <Editor onCreate={onCreate} />
-      <List toDos={toDos} />
+      <List toDos={toDos} onUpdate={onUpdate} onDelete={onDelete} />
     </div>
   );
 }

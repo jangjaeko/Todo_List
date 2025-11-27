@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./List.css";
 import TodoItem from "./TodoItem";
 
-export default function List({ toDos }) {
+export default function List({ toDos, onUpdate, onDelete }) {
   const [searchTerm, setSearchTerm] = useState("");
   const onChangeSearchTerm = (e) => {
     setSearchTerm(e.target.value);
@@ -23,7 +23,12 @@ export default function List({ toDos }) {
       <input placeholder="search..." onChange={onChangeSearchTerm} />
       <div className="todos_wrapper">
         {filteredToDos.map((todo) => (
-          <TodoItem key={todo.id} {...todo} />
+          <TodoItem
+            key={todo.id}
+            {...todo}
+            onUpdate={onUpdate}
+            onDelete={onDelete}
+          />
         ))}
       </div>
     </div>
