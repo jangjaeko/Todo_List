@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useReducer } from "react";
 import Header from "./component/Header.jsx";
 import Editor from "./component/Editor.jsx";
 import List from "./component/List.jsx";
@@ -19,32 +19,57 @@ const mockData = [
     date: new Date().getTime(),
   },
 ];
-
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "create":
+      return [action.data, ...state];
+    case "update":
+      return state.map((item) =>
+        item.id === action.targetId ? { ...item, isDone: !item.isDone } : item
+      );
+    case "delete":
+      console.log("delete");
+      return state.filter((item) => item.id !== action.targetId);
+    default:
+      return state;
+  }
+};
 function App() {
-  const [toDos, setToDos] = useState(mockData);
+  // const [toDos, setToDos] = useState(mockData);
+  const [toDos, dispatch] = useReducer(reducer, mockData);
   const idRef = useRef(2);
 
   const onCreate = (content) => {
-    const newTodo = {
-      id: idRef.current++,
-      isDone: false,
-      content,
-      date: new Date().getTime(),
-    };
-
-    setToDos([newTodo, ...toDos]);
+    dispatch({
+      type: "create",
+      data: {
+        id: idRef.current++,
+        isDone: false,
+        content,
+        date: new Date().getTime(),
+      },
+    });
   };
   const onUpdate = (targetId) => {
     // in todos array toggle isDone value of the todo item whose id is equal to targetIds
-    setToDos(
-      toDos.map((todo) =>
-        todo.id === targetId ? { ...todo, isDone: !todo.isDone } : todo
-      )
-    );
+    dispatch({
+      type: "update",
+      targetId: targetId,
+    });
+
+    // setToDos(
+    //   toDos.map((todo) =>
+    //     todo.id === targetId ? { ...todo, isDone: !todo.isDone } : todo
+    //   )
+    // );
   };
   const onDelete = (targetId) => {
     // in todos array filter out the todo item whose id is equal to targetId
-    setToDos(toDos.filter((todo) => todo.id !== targetId));
+    // setToDos(toDos.filter((todo) => todo.id !== targetId));
+    dispatch({
+      type: "delete",
+      targetId: targetId,
+    });
   };
 
   return (
