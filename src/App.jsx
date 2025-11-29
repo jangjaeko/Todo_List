@@ -1,4 +1,4 @@
-import { useState, useRef, useReducer } from "react";
+import { useState, useRef, useReducer, useCallback } from "react";
 import Header from "./component/Header.jsx";
 import Editor from "./component/Editor.jsx";
 import List from "./component/List.jsx";
@@ -34,12 +34,14 @@ const reducer = (state, action) => {
       return state;
   }
 };
+
 function App() {
   // const [toDos, setToDos] = useState(mockData);
   const [toDos, dispatch] = useReducer(reducer, mockData);
   const idRef = useRef(2);
 
-  const onCreate = (content) => {
+  //after component is mounted once, functions are created once and reused
+  const onCreate = useCallback((content) => {
     dispatch({
       type: "create",
       data: {
@@ -49,28 +51,54 @@ function App() {
         date: new Date().getTime(),
       },
     });
-  };
-  const onUpdate = (targetId) => {
-    // in todos array toggle isDone value of the todo item whose id is equal to targetIds
-    dispatch({
-      type: "update",
-      targetId: targetId,
-    });
+  }, []);
 
-    // setToDos(
-    //   toDos.map((todo) =>
-    //     todo.id === targetId ? { ...todo, isDone: !todo.isDone } : todo
-    //   )
-    // );
-  };
-  const onDelete = (targetId) => {
-    // in todos array filter out the todo item whose id is equal to targetId
-    // setToDos(toDos.filter((todo) => todo.id !== targetId));
+  const onDelete = useCallback((targetId) => {
     dispatch({
       type: "delete",
       targetId: targetId,
     });
-  };
+  }, []);
+
+  const onUpdate = useCallback((targetId) => {
+    dispatch({
+      type: "update",
+      targetId: targetId,
+    });
+  }, []);
+
+  // const onCreate = (content) => {
+  //     dispatch({
+  //       type: "create",
+  //       data: {
+  //         id: idRef.current++,
+  //         isDone: false,
+  //         content,
+  //         date: new Date().getTime(),
+  //       },
+  //     });
+  //   };
+  // const onUpdate = (targetId) => {
+  //   // in todos array toggle isDone value of the todo item whose id is equal to targetIds
+  //   dispatch({
+  //     type: "update",
+  //     targetId: targetId,
+  //   });
+
+  // setToDos(
+  //   toDos.map((todo) =>
+  //     todo.id === targetId ? { ...todo, isDone: !todo.isDone } : todo
+  //   )
+  // );
+  // };
+  // const onDelete = (targetId) => {
+  //   // in todos array filter out the todo item whose id is equal to targetId
+  //   // setToDos(toDos.filter((todo) => todo.id !== targetId));
+  //   dispatch({
+  //     type: "delete",
+  //     targetId: targetId,
+  //   });
+  // };
 
   return (
     <div className="App">

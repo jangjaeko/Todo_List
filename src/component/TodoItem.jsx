@@ -14,15 +14,17 @@ function TodoItem({ id, isDone, content, date, onUpdate, onDelete }) {
 }
 
 // High order component to memorize the component (HOC)
-export default memo(TodoItem, (prevProps, nextProps) => {
+export default memo(
+  TodoItem
+  // , (prevProps, nextProps) => {
   // return true if props are equal, preventing re-render
   // true : do not re-render
   // false : re-render
 
-  if (prevProps.isDone !== nextProps.isDone) return false;
-  if (prevProps.content !== nextProps.content) return false;
-  if (prevProps.date !== nextProps.date) return false;
-  if (prevProps.id !== nextProps.id) return false;
+  // if (prevProps.isDone !== nextProps.isDone) return false;
+  // if (prevProps.content !== nextProps.content) return false;
+  // if (prevProps.date !== nextProps.date) return false;
+  // if (prevProps.id !== nextProps.id) return false;
 
-  return true;
-});
+  // return true;}
+);
