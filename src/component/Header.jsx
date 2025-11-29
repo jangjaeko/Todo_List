@@ -1,6 +1,9 @@
 import React from "react";
 import "./Header.css";
-export default function Header() {
+import { memo } from "react";
+
+// no props needed so only render once
+function Header() {
   return (
     <div className="Header">
       <h3>🎈Today🎈</h3>
@@ -8,3 +11,7 @@ export default function Header() {
     </div>
   );
 }
+
+// const memorizationHeader = memo(Header);
+
+export default memo(Header);
